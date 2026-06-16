@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -309,7 +308,7 @@ function App(){
       const key=`alert_s${currentWeek}`;
       const last=localStorage.getItem(key);
       if(!last||Date.now()-Number(last)>3600000*12){
-        addNotif('fa-triangle-exclamation',`⚠️ Alerta Semana ${currentWeek}`,`El avance de la semana ${currentWeek} es ${pct}% (< 70%). Se requiere acción correctiva inmediata.`,'red');
+        addNotif('fa-triangle-exclamation',`Alerta → Alerta Alerta Semana ${currentWeek}`,`El avance de la semana ${currentWeek} es ${pct}% (< 70%). Se requiere acción correctiva inmediata.`,'red');
         localStorage.setItem(key,Date.now().toString());
       }
     }
@@ -322,7 +321,7 @@ function App(){
       if(now.getDay()===5&&now.getHours()===14&&now.getMinutes()===0){
         const key=`friday_${now.toDateString()}`;
         if(!localStorage.getItem(key)){
-          addNotif('fa-calendar-check','📋 Recordatorio Viernes',`Recuerda actualizar el resumen semanal de la Semana ${currentWeek} antes de cerrar jornada.`,'indigo');
+          addNotif('fa-calendar-check','Recordatorio → Recordatorio Recordatorio Viernes',`Recuerda actualizar el resumen semanal de la Semana ${currentWeek} antes de cerrar jornada.`,'indigo');
           localStorage.setItem(key,'1');
         }
       }
@@ -358,7 +357,7 @@ function App(){
     for(const t of DEMO)await dbAdd(t);
     addNotif('fa-download','Datos demo cargados','Se cargaron '+DEMO.length+' tareas de demostración.','blue');
     setIsLoadingDemo(false);
-    showToast('✅ Tareas cargadas');
+    showToast('Tareas cargadas → Tareas cargadas Tareas cargadas');
   };
 
   const resetDemo=async()=>{
@@ -373,7 +372,7 @@ function App(){
       // Cargar tareas demo limpias
       for(const t of DEMO)await dbAdd(t);
       addNotif('fa-rotate-left','Tareas reiniciadas','Todas las tareas fueron restablecidas al estado inicial.','indigo');
-      showToast('🔄 Tareas reiniciadas correctamente');
+      showToast('Tareas reiniciadas → Tareas reiniciadas Tareas reiniciadas correctamente');
     }catch(e){
       console.error(e);
       showToast('❌ Error al reiniciar tareas');
@@ -409,7 +408,7 @@ function App(){
         });
         const txt=await res.text();
         if(res.ok){
-          addNotif('fa-circle-check','Correo enviado',`✅ Enviado a ${email}: ${subject}`,'emerald');
+          addNotif('fa-circle-check','Correo enviado',`Tareas cargadas → Tareas cargadas Enviado a ${email}: ${subject}`,'emerald');
         }else{
           addNotif('fa-triangle-exclamation','Error correo',`❌ EmailJS (${email}): ${txt}`,'red');
           console.error('EmailJS error:',res.status,txt);
@@ -427,7 +426,7 @@ function App(){
     addNotif('fa-plus','Tarea creada',`"${newTask.title}" fue añadida al tablero.`,'blue');
     setShowAddModal(false);
     setNewTask({title:'',block:'General',assignee:'Inspector',priority:'Media',start:currentWeek,end:currentWeek+1,norma:'General',entregable:false,aprobador:''});
-    showToast('✅ Tarea creada');
+    showToast('Tareas cargadas → Tareas cargadas Tarea creada');
   };
 
   const handleSaveEdit=async()=>{
@@ -436,7 +435,7 @@ function App(){
     await dbUpdate(id,{title:fields.title,block:fields.block,assignee:fields.assignee,priority:fields.priority,start:fields.start,end:fields.end});
     addNotif('fa-pen','Tarea editada',`"${fields.title}" fue actualizada.`,'indigo');
     setEditTask(null);
-    showToast('✅ Cambios guardados');
+    showToast('Tareas cargadas → Tareas cargadas Cambios guardados');
   };
 
   const moveTask=(taskId,newStatus,reason='')=>{
@@ -452,7 +451,7 @@ function App(){
         const bloqueCheck=tasks.filter(t=>t.status!=='Done'&&t.id!==taskId);
         const weekProgress=tasks.filter(t=>t.start<=currentWeek&&t.end>=currentWeek);
         const pctWeek=weekProgress.length>0?Math.round(weekProgress.filter(t=>t.status==='Done'||t.id===taskId).length/weekProgress.length*100):100;
-        sendEmailAlert(`✅ Tarea completada: ${task.title}`,`La tarea "${task.title}" (Bloque: ${task.block||'-'}, Norma: ${task.norma||'-'}, Entregable: ${task.entregable?'Sí':'No'}) fue completada en la semana ${currentWeek}. Progreso de semana: ${pctWeek}%. Aprobador: ${task.aprobador||'N/A'}.`);
+        sendEmailAlert(`Tareas cargadas → Tareas cargadas Tarea completada: ${task.title}`,`La tarea "${task.title}" (Bloque: ${task.block||'-'}, Norma: ${task.norma||'-'}, Entregable: ${task.entregable?'Sí':'No'}) fue completada en la semana ${currentWeek}. Progreso de semana: ${pctWeek}%. Aprobador: ${task.aprobador||'N/A'}.`);
       }
       if(newStatus==='Blocked'){
         sendEmailAlert(`🛑 Tarea bloqueada: ${task.title}`,`La tarea "${task.title}" fue marcada como bloqueada. Motivo: ${reason||'Sin especificar'}. Responsable: ${task.assignee}.`);
@@ -471,7 +470,7 @@ function App(){
     if(!text.trim())return;
     dbUpdate(task.id,{subtasks:[...(task.subtasks||[]),{id:Date.now(),text:text.trim(),done:false}]});
     setNewSubInputs(p=>({...p,[task.id]:''}));
-    showToast('✅ Subtarea agregada');
+    showToast('Tareas cargadas → Tareas cargadas Subtarea agregada');
   };
   const addAttachment=task=>{
     if(!newAttLink)return;
@@ -508,7 +507,7 @@ function App(){
     }).join('');
     const blockedRows=tasks.filter(t=>t.status==='Blocked').map(t=>`<tr class="blocked-row"><td>${t.title}</td><td>${t.block}</td><td>${t.assignee}</td><td>${t.blockReason||'Sin motivo registrado'}</td><td>S${t.start}–S${t.end}</td></tr>`).join('');
     const allRows=tasks.map(t=>{
-      const sc={'Done':'✅ Completada','In Progress':'🔵 En Progreso','Blocked':'🔴 Bloqueada','To Do':'⚪ Pendiente'}[t.status]||t.status;
+      const sc={'Done':'Tareas cargadas → Tareas cargadas Completada','In Progress':'🔵 En Progreso','Blocked':'🔴 Bloqueada','To Do':'⚪ Pendiente'}[t.status]||t.status;
       const pr=t.priority==='Alta'?'🔴 Alta':t.priority==='Media'?'🟡 Media':'🟢 Baja';
       return `<tr class="${t.status==='Blocked'?'blocked-row':t.status==='Done'?'done-row':''}"><td>${t.title}</td><td>${t.block}</td><td>${t.assignee}</td><td>${pr}</td><td>${t.norma||'General'}</td><td>S${t.start}–S${t.end}</td><td>${sc}</td><td>${t.progress||0}%</td><td>${t.aprobador||'—'}</td></tr>`;
     }).join('');
@@ -552,14 +551,14 @@ function App(){
 <div class="header">
   <h1>🏭 INDIMON S.A.S. — Informe Ejecutivo de Calidad</h1>
   <p>Departamento de Calidad · Control de Gestión de Proyectos</p>
-  <div class="meta"><span>📅 Generado: ${now}</span><span>📋 Semana actual: S${currentWeek}</span><span>🗄️ Fuente: Firebase Firestore (tiempo real)</span></div>
+  <div class="meta"><span>📅 Generado: ${now}</span><span>Recordatorio → Recordatorio Semana actual: S${currentWeek}</span><span>🗄️ Fuente: Firebase Firestore (tiempo real)</span></div>
 </div>
 
 <div class="kpi-grid">
   <div class="kpi"><div class="lbl">Cumplimiento Global</div><div class="val ${prog>=75?'green':prog>=40?'amber':'blue'}">${prog}%</div><div class="sub">Progreso promedio de ${totalT} tareas</div></div>
   <div class="kpi"><div class="lbl">Completadas</div><div class="val green">${doneT}</div><div class="sub">de ${totalT} · ${totalT>0?Math.round(doneT/totalT*100):0}% finalización</div></div>
   <div class="kpi"><div class="lbl">En Progreso</div><div class="val blue">${inPT}</div><div class="sub">Semana ${currentWeek} · Eficiencia: ${effic}%</div></div>
-  <div class="kpi"><div class="lbl">Bloqueadas</div><div class="val ${blkT>0?'red':'slate'}">${blkT}</div><div class="sub">${blkT>0?'⚠️ Requieren atención inmediata':'Sin bloqueos activos'}</div></div>
+  <div class="kpi"><div class="lbl">Bloqueadas</div><div class="val ${blkT>0?'red':'slate'}">${blkT}</div><div class="sub">${blkT>0?'Alerta → Alerta Requieren atención inmediata':'Sin bloqueos activos'}</div></div>
 </div>
 
 <div class="section">
@@ -580,7 +579,7 @@ ${blkT>0?`<div class="section">
 </div>`:''}
 
 <div class="section">
-  <div class="section-header"><h2>📋 Registro Completo de Actividades</h2></div>
+  <div class="section-header"><h2>Recordatorio → Recordatorio Registro Completo de Actividades</h2></div>
   <table><thead><tr><th>Actividad</th><th>Bloque</th><th>Responsable</th><th>Prioridad</th><th>Norma</th><th>Semanas</th><th>Estado</th><th>Avance</th><th>Aprobador</th></tr></thead>
   <tbody>${allRows}</tbody></table>
 </div>
@@ -739,7 +738,7 @@ ${blkT>0?`<div class="section">
                     <div key={i} className="flex items-center gap-1.5 group">
                       <span className="flex-1 text-[10px] text-slate-300 truncate font-mono">{em}</span>
                       <button onClick={()=>{const nl=emailList.filter((_,j)=>j!==i);setEmailList(nl);localStorage.setItem('indimon_emails',JSON.stringify(nl));}}
-                        className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-all">
+                        className="w-6 h-6 flex items-center justify-center rounded-lg bg-red-500/15 text-red-400 shrink-0">
                         <i className="fa-solid fa-xmark text-[10px]"/>
                       </button>
                     </div>
@@ -1018,7 +1017,7 @@ ${blkT>0?`<div class="section">
                                       taskNote:'',
                                       blockReason:''
                                     });
-                                    showToast('🔄 Tarea reiniciada');
+                                    showToast('Tareas reiniciadas → Tareas reiniciadas Tarea reiniciada');
                                   }}
                                   className="text-slate-500 hover:text-amber-400 transition-colors p-1"
                                   title="Reiniciar esta tarea">
@@ -1153,7 +1152,7 @@ ${blkT>0?`<div class="section">
                                       value={noteInputs[task.id]!==undefined?noteInputs[task.id]:(task.taskNote||'')}
                                       onChange={e=>setNoteInputs(p=>({...p,[task.id]:e.target.value}))}
                                       onBlur={e=>saveNote(task,e.target.value)}
-                                      placeholder="📋 Observaciones, bloqueos, avances..."
+                                      placeholder="Recordatorio → Recordatorio Observaciones, bloqueos, avances..."
                                       className={`w-full text-[11px] px-2 py-1.5 rounded-lg border resize-none outline-none focus:ring-1 focus:ring-amber-500/40 ${darkMode?'bg-slate-800 border-slate-600 text-slate-200 placeholder-slate-600':'bg-white border-slate-300 text-slate-700 placeholder-slate-400'}`}
                                     />
                                     <div className="flex items-center gap-2 mt-2">
@@ -1219,7 +1218,7 @@ ${blkT>0?`<div class="section">
                             <div className="font-semibold truncate mb-0.5">{t.title}</div>
                             <div className="flex justify-between items-center">
                               <span className="opacity-60 text-[10px]">{t.assignee}</span>
-                              <span className="font-bold text-[10px]">{t.status==='Done'?'✅':t.status==='Blocked'?'🛑':`${t.progress||0}%`}</span>
+                              <span className="font-bold text-[10px]">{t.status==='Done'?'Tareas cargadas → Tareas cargadas':t.status==='Blocked'?'🛑':`${t.progress||0}%`}</span>
                             </div>
                           </div>
                         ))}
